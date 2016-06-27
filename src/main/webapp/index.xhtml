@@ -18,14 +18,15 @@
 
             <h:panelGrid id="dateGrid" columns="2">
                 <p:outputLabel for="date" value="Selected date:"  />
-                <p:calendar id="date"
+                <p:calendar widgetVar="calendar"
+                            id="date"
                             value="#{indexController.date}"
                             required="true"
                             pattern="yyyy-MM-dd"
                             maxdate="#{indexController.maxDate}"
                             style="padding-left: 5px">
 
-                    <p:ajax event="dateSelect" listener="#{indexController.onDateSelect}" update="form"/>
+                    <p:ajax event="dateSelect" listener="#{indexController.onDateSelect}" />
                     <p:ajax event="click" update="dateGrid" resetValues="true"/>
                 </p:calendar>
             </h:panelGrid>
@@ -41,8 +42,10 @@
                                  onclick="PF('statusDialog').show()"/>
                 <p:commandButton
                         value="Clean"
-                        actionListener="#{indexController.emptyTable}"
+                        actionListener="#{indexController.resetValues}"
                         rendered="#{indexController.dataExist}"
+                        resetValues="true"
+                        oncomplete="PF('calendar').setDate(null)"
                         update="form"/>
             </h:panelGrid>
 

@@ -113,9 +113,10 @@ public class IndexController implements Serializable {
      * Remove data table component with data.
      *
      */
-    public void emptyTable() {
+    public void resetValues() {
         logger.info("Deleting data from table");
         items.clear();
         dataExist = false;
+        date = null;
     }
 }
