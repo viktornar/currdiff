@@ -47,6 +47,7 @@ public class CurrencyRateServiceTest {
         Assert.assertTrue(item.getQuantity() > 0);
         Assert.assertFalse(item.getUnit().isEmpty());
 
+        // Convert date as string to java Date object
         DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
         Date result = df.parse(item.getDate());
 

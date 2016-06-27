@@ -11,7 +11,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by v.nareiko on 2016-06-26.
+ * Used as POJO for data exchange between remote service and prime faces components.
+ *
+ * @author v.nareiko
  */
 @XmlRootElement(name = "item")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,16 +41,19 @@ public class Item implements Comparable<Item>{
     @Setter
     private String unit;
 
+    // TODO: Change Float object to double primitive type
     @Getter
     @Setter
     private Float rateChange;
 
+    // TODO: Change Float object to double primitive type
     @Getter
     @Setter
     private Float rateChangeInPercentage;
 
     @Override
     public int compareTo(Item o) {
+        // Sort collection in descending order.
         if (this.getRate() > o.getRate()){
             return -1;
         }else{

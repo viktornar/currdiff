@@ -1,5 +1,18 @@
+/*
+ This file is part of CurrDiff.
+ CurrDiff is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ Subsonic is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License
+ along with Subsonic.  If not, see <http://www.gnu.org/licenses/>.
+ Copyright 2016 (C) Viktor Nareiko
+ */
 package lt.viktornar.currdiff.view;
-
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +33,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
- * Created by v.nareiko on 2016-06-26.
+ * Used as controller to connect jsf view with service layer.
+ *
+ * @author v.nareiko
  */
-
 @Component(value="indexView")
 @Scope("session")
 public class IndexView implements Serializable {
@@ -51,24 +65,42 @@ public class IndexView implements Serializable {
     @Autowired
     private SimpleDateFormat customSimpleDateFormat;
 
+    /**
+     * Updates date
+     *
+     * @param event prime faces component event.
+     */
     public void onDateSelect(SelectEvent event) {
         logger.info(String.format("Date selected: %s", customSimpleDateFormat.format(event.getObject())));
         date = (Date)event.getObject();
     }
 
+    /**
+     * Restrict max date select in calendar component.
+     *
+     * @return 2014-12-31 date object.
+     */
     public Date getMaxDate(){
         return new GregorianCalendar(2014, Calendar.DECEMBER, 31).getTime();
     }
 
+    /**
+     * Fill data table component with data.
+     *
+     */
     public void populateTable() {
         logger.info(String.format("Date to process: %s", customSimpleDateFormat.format(date)));
         items = currencyRateService.getChangesOfRatesByDate(date);
-
+        // Show data table component only if data exists.
         if (items.size() > 0) {
             dataExist = true;
         }
     }
 
+    /**
+     * Remove data table component with data.
+     *
+     */
     public void emptyTable() {
         logger.info("Deleting data from table");
         items.clear();
