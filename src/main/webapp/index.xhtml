@@ -6,9 +6,8 @@
         <h1 class="page-header ">
             <i class="fa fa-money"></i>Get the changes of currency rates for the selected date
         </h1>
-        <p:growl id="informationMsgs" showDetail="true" life="3000"/>
 
-        <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+        <p:dialog modal="true" widgetVar="statusDialog" draggable="false" closable="false" resizable="false" showHeader="false">
             <p:graphicImage name="img/ajaxloadingbar.gif" />
         </p:dialog>
 
@@ -23,13 +22,34 @@
                             maxdate="#{indexView.maxDate}"
                             style="padding-left: 5px">
 
-                    <p:ajax event="dateSelect" listener="#{indexView.onDateSelect}" update="informationMsgs" />
+                    <p:ajax event="dateSelect" listener="#{indexView.onDateSelect}" />
                     <p:ajax event="click" update="dateGrid" resetValues="true"/>
                 </p:calendar>
             </h:panelGrid>
             <p:separator />
-            <p:commandButton value="Get changes" actionListener="#{indexView.click}" icon="ui-icon-check" update="form"/>
+            <h:panelGrid id="buttonGrid" columns="2" cellpadding="5" style="width: 230px">
+                <p:commandButton value="Get changes"
+                                 actionListener="#{indexView.populateTable}"
+                                 icon="ui-icon-check"
+                                 update="form"
+                                 ajax="false"
+                                 onclick="PF('statusDialog').show()"/>
+                <p:commandButton
+                        value="Clean"
+                        actionListener="#{indexView.emptyTable}"
+                        rendered="#{indexView.dataExist}"
+                        update="form"/>
+            </h:panelGrid>
+            <p:separator rendered="#{indexView.dataExist}" />
+            <p:dataTable var="rates" value="#{indexView.exchangeRates}" id="dataTable" rendered="#{indexView.dataExist}">
+                <p:column headerText="Currency">
+                    <h:outputText value="#{rates.currency}" />
+                </p:column>
 
+                <p:column headerText="Quantity">
+                    <h:outputText value="#{rates.quantity}" />
+                </p:column>
+            </p:dataTable>
         </h:form>
     </ui:define>
 </ui:composition>        

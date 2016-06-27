@@ -3,7 +3,6 @@ package lt.viktornar.currdiff.service;
 import lt.viktornar.currdiff.model.ExchangeRate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -33,14 +32,12 @@ public class CurrencyRateService {
 
     private List<ExchangeRate> getDummyValues() {
         List<ExchangeRate> rates = new ArrayList<>();
-
-//        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
-//        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
-//        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
-//        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
-//        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
-//        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
-
+        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
+        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
+        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
+        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
+        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
+        rates.add(new ExchangeRate(new Date(2014,12,12), "AZN", 1, 2.4030f, "LTL per 1 currency"));
         return rates;
     }
 }

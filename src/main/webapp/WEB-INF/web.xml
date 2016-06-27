@@ -13,19 +13,6 @@
         <param-value>application.root</param-value>
     </context-param>
 
-    <!--<context-param>-->
-        <!--<param-name>contextConfigLocation</param-name>-->
-        <!--<param-value>/WEB-INF/applicationContext.xml</param-value>-->
-    <!--</context-param>-->
-
-    <!-- The Bootstrap listener to start up and shut down Spring's root WebApplicationContext. It is registered to Servlet Container -->
-    <!--<listener>-->
-        <!--<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
-    <!--</listener>-->
-    <!--<listener>-->
-        <!--<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>-->
-    <!--</listener>-->
-
     <context-param>
         <param-name>log4jConfigLocation</param-name>
         <param-value>classpath:/log4j.properties</param-value>

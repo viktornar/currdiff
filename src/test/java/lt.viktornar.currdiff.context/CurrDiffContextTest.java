@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= AppConfig.class)
 public class CurrDiffContextTest {
-
     /**
      * Just an empty method witch is used only for context startup and validation test.
      */
@@ -19,5 +18,4 @@ public class CurrDiffContextTest {
     public void testEmpty() {
         Assert.assertTrue(true);
     }
-
 }

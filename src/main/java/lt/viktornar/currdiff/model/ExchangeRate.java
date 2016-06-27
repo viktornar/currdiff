@@ -3,12 +3,18 @@ package lt.viktornar.currdiff.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by v.nareiko on 2016-06-26.
  */
-public class ExchangeRate {
+public class ExchangeRate implements Serializable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     public ExchangeRate(Date date, String currency, Integer quantity, Float rate, String unit) {
         this.date = date;
         this.currency = currency;
