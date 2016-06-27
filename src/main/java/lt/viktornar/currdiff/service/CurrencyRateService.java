@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -69,7 +70,7 @@ public class CurrencyRateService {
             ExchangeRates result = restTemplate.postForObject(settingsService.getServiceUrl(), map, ExchangeRates.class);
             items.addAll(result.getItems());
             logger.info(String.format("Got rates by given date [%s]", dateParameter));
-        } catch (RestClientException e) {
+        } catch (RestClientException | HttpMessageNotReadableException e) {
             logger.error(String.format("Could not fetch data from remote service: %s", settingsService.getServiceUrl()));
             e.printStackTrace();
         }
@@ -90,25 +91,37 @@ public class CurrencyRateService {
         final List<Item> itemsOfPrevDate = getRatesByDate(prevDayDate);
         List<Item> diffItems = new ArrayList<>();
 
-        if(!itemsOfGivenDate.isEmpty() && !itemsOfPrevDate.isEmpty()) {
+        if (!itemsOfGivenDate.isEmpty() && !itemsOfPrevDate.isEmpty()) {
             // Sort by currency just in case if service return items not in the same order
             Collections.sort(itemsOfGivenDate, new CurrencyComparator());
             Collections.sort(itemsOfPrevDate, new CurrencyComparator());
 
-            // itemsOfGivenDate.size() == itemsOfPrevDate.size()
+            // Some currency during time are abolished.
+            // For example in 1998-12-31 BEF currency existed but in 1999-01-01 doesn't.
+            // So in some cases itemsOfGivenDate.size() != itemsOfPrevDate.size()
+
             for (int i = 0; i < itemsOfGivenDate.size(); i++) {
+
                 final Item givenDateItem = itemsOfGivenDate.get(i);
-                final Item prevDateItem = itemsOfPrevDate.get(i);
-                Item itemToReturn = new Item();
-                BeanUtils.copyProperties(givenDateItem, itemToReturn);
-                Float diffRate = givenDateItem.getRate() - prevDateItem.getRate();
-                // The main algorithm for change of rate calculation in percentage (from school :))
-                float percentage = (diffRate / prevDateItem.getRate()) * 100f;
+                Item itemToReturn = null;
 
-                itemToReturn.setRateChangeInPercentage(roundRateChange(percentage));
-                itemToReturn.setRateChange(roundRateChange(diffRate));
+                for (int j = 0; j < itemsOfPrevDate.size(); j++) {
+                    final Item prevDateItem = itemsOfPrevDate.get(j);
 
-                diffItems.add(itemToReturn);
+                    if (givenDateItem.getCurrency().equals(prevDateItem.getCurrency())) {
+                        itemToReturn = new Item();
+                        BeanUtils.copyProperties(givenDateItem, itemToReturn);
+                        Float diffRate = givenDateItem.getRate() - prevDateItem.getRate();
+                        // The main algorithm for change of rate calculation in percentage (from school :))
+                        float percentage = (diffRate / prevDateItem.getRate()) * 100f;
+                        itemToReturn.setRateChangeInPercentage(roundRateChange(percentage));
+                        itemToReturn.setRateChange(roundRateChange(diffRate));
+                    }
+                }
+
+                if (itemToReturn != null) {
+                    diffItems.add(itemToReturn);
+                }
             }
 
             // The list of changes has to be ordered, biggest Exchange rate increase first
@@ -119,6 +132,7 @@ public class CurrencyRateService {
     }
 
     // Helper methods
+
     /**
      * Helper method to subtract days from given date.
      *

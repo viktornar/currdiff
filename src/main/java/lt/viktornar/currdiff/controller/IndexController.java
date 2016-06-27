@@ -110,11 +110,11 @@ public class IndexController implements Serializable {
     }
 
     /**
-     * Remove data table component with data.
+     * Reset all view values.
      *
      */
     public void resetValues() {
-        logger.info("Deleting data from table");
+        logger.info("Resetting all values");
         items.clear();
         dataExist = false;
         date = null;
