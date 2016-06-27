@@ -1,27 +1,36 @@
-<f:view xmlns="http://www.w3c.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:prime="http://primefaces.org/ui">
-	<h:head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-		<title>#{menuController.title}</title>
-		<style>
-		body {font-size:12px; }
-</style>
-	</h:head>
-	<h:body>
-		<h:form>
-			<prime:panel header="Prime Faces 5.3" >
-				<div style="height:50px">
-					This is a simple PrimeFaces 5.3 project running on Embedded Tomcat.
-				</div>
-			</prime:panel>
-			<prime:panel header="JSF 2.2 Bean Access">
-				#{helloWorld.hello}
-			</prime:panel>
-		</h:form>
-	</h:body>
-</f:view>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/templates/default/main.xhtml">
+    <ui:define name="content">
+        <h1 class="page-header ">
+            <i class="fa fa-money"></i>Get the changes of currency rates for the selected date
+        </h1>
+        <p:growl id="informationMsgs" showDetail="true" life="3000"/>
+
+        <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+            <p:graphicImage name="img/ajaxloadingbar.gif" />
+        </p:dialog>
+
+        <h:form id="form">
+            <p:messages id="msgs" autoUpdate="false" closable="true" />
+            <h:panelGrid id="dateGrid" columns="2">
+                <p:outputLabel for="date" value="Selected date:"  />
+                <p:calendar id="date"
+                            value="#{indexView.date}"
+                            required="true"
+                            pattern="yyyy-MM-dd"
+                            maxdate="#{indexView.maxDate}"
+                            style="padding-left: 5px">
+
+                    <p:ajax event="dateSelect" listener="#{indexView.onDateSelect}" update="informationMsgs" />
+                    <p:ajax event="click" update="dateGrid" resetValues="true"/>
+                </p:calendar>
+            </h:panelGrid>
+            <p:separator />
+            <p:commandButton value="Get changes" actionListener="#{indexView.click}" icon="ui-icon-check" update="form"/>
+
+        </h:form>
+    </ui:define>
+</ui:composition>        
+
