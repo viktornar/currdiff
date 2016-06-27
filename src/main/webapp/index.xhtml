@@ -11,8 +11,10 @@
             <p:graphicImage name="img/ajaxloadingbar.gif" />
         </p:dialog>
 
+        <p:messages id="errorMsgs" autoUpdate="false" closable="true" globalOnly="true"  />
+
         <h:form id="form">
-            <p:messages id="msgs" autoUpdate="false" closable="true" />
+            <p:messages id="validationMsgs" for="date" autoUpdate="false" closable="true" />
 
             <h:panelGrid id="dateGrid" columns="2">
                 <p:outputLabel for="date" value="Selected date:"  />
@@ -23,7 +25,7 @@
                             maxdate="#{indexController.maxDate}"
                             style="padding-left: 5px">
 
-                    <p:ajax event="dateSelect" listener="#{indexController.onDateSelect}" />
+                    <p:ajax event="dateSelect" listener="#{indexController.onDateSelect}" update="form"/>
                     <p:ajax event="click" update="dateGrid" resetValues="true"/>
                 </p:calendar>
             </h:panelGrid>

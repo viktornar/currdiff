@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -94,6 +96,16 @@ public class IndexController implements Serializable {
         // Show data table component only if data exists.
         if (items.size() > 0) {
             dataExist = true;
+        } else {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.addMessage(
+                    null,
+                    new FacesMessage(
+                            FacesMessage.SEVERITY_ERROR,
+                            "Error: Error fetching data from remote service",
+                            null
+                    )
+            );
         }
     }
 

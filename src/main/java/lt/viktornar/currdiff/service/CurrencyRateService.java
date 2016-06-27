@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
@@ -54,19 +55,26 @@ public class CurrencyRateService {
      * @return List of items fetched from remote service.
      */
     public List<Item> getRatesByDate(Date date) {
+        List<Item> items = new ArrayList<>();
         String dateParameter = customSimpleDateFormat.format(date);
 
         logger.info(String.format("Trying to get rates by given date [%s]", dateParameter));
 
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("Date", dateParameter);
 
         RestTemplate restTemplate = new RestTemplate();
-        ExchangeRates result = restTemplate.postForObject(settingsService.getServiceUrl(), map, ExchangeRates.class);
 
-        logger.info(String.format("Got rates by given date [%s]", dateParameter));
+        try {
+            ExchangeRates result = restTemplate.postForObject(settingsService.getServiceUrl(), map, ExchangeRates.class);
+            items.addAll(result.getItems());
+            logger.info(String.format("Got rates by given date [%s]", dateParameter));
+        } catch (RestClientException e) {
+            logger.error(String.format("Could not fetch data from remote service: %s", settingsService.getServiceUrl()));
+            e.printStackTrace();
+        }
 
-        return result.getItems();
+        return items;
     }
 
     /**
@@ -80,30 +88,32 @@ public class CurrencyRateService {
 
         final List<Item> itemsOfGivenDate = getRatesByDate(date);
         final List<Item> itemsOfPrevDate = getRatesByDate(prevDayDate);
-
-        // Sort by currency just in case if service return items not in the same order
-        Collections.sort(itemsOfGivenDate, new CurrencyComparator());
-        Collections.sort(itemsOfPrevDate, new CurrencyComparator());
-
         List<Item> diffItems = new ArrayList<>();
-        // itemsOfGivenDate.size() == itemsOfPrevDate.size()
-        for (int i = 0; i < itemsOfGivenDate.size(); i++) {
-            final Item givenDateItem = itemsOfGivenDate.get(i);
-            final Item prevDateItem = itemsOfPrevDate.get(i);
-            Item itemToReturn = new Item();
-            BeanUtils.copyProperties(givenDateItem, itemToReturn);
-            Float diffRate = givenDateItem.getRate() - prevDateItem.getRate();
-            // The main algorithm for change of rate calculation in percentage (from school :))
-            float percentage = (diffRate / prevDateItem.getRate()) * 100f;
 
-            itemToReturn.setRateChangeInPercentage(roundRateChange(percentage));
-            itemToReturn.setRateChange(roundRateChange(diffRate));
+        if(!itemsOfGivenDate.isEmpty() && !itemsOfPrevDate.isEmpty()) {
+            // Sort by currency just in case if service return items not in the same order
+            Collections.sort(itemsOfGivenDate, new CurrencyComparator());
+            Collections.sort(itemsOfPrevDate, new CurrencyComparator());
 
-            diffItems.add(itemToReturn);
+            // itemsOfGivenDate.size() == itemsOfPrevDate.size()
+            for (int i = 0; i < itemsOfGivenDate.size(); i++) {
+                final Item givenDateItem = itemsOfGivenDate.get(i);
+                final Item prevDateItem = itemsOfPrevDate.get(i);
+                Item itemToReturn = new Item();
+                BeanUtils.copyProperties(givenDateItem, itemToReturn);
+                Float diffRate = givenDateItem.getRate() - prevDateItem.getRate();
+                // The main algorithm for change of rate calculation in percentage (from school :))
+                float percentage = (diffRate / prevDateItem.getRate()) * 100f;
+
+                itemToReturn.setRateChangeInPercentage(roundRateChange(percentage));
+                itemToReturn.setRateChange(roundRateChange(diffRate));
+
+                diffItems.add(itemToReturn);
+            }
+
+            // The list of changes has to be ordered, biggest Exchange rate increase first
+            Collections.sort(diffItems, new RateChangeInPercentageComparator());
         }
-
-        // The list of changes has to be ordered, biggest Exchange rate increase first
-        Collections.sort(diffItems, new RateChangeInPercentageComparator());
 
         return diffItems;
     }
