@@ -27,7 +27,7 @@ import java.io.File;
  */
 public class Starter {
     public static final int DEFAULT_PORT = 8080;
-    private static final String CONTEXT_PATH = "/";
+    private static final String CONTEXT_PATH = "";
     private static final String WEB_APPDIR_LOCATION = "src/main/webapp";
     private int port;
     private Tomcat server;

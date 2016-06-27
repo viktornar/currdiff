@@ -23,3 +23,69 @@ The main technologies (frameworks, libraries) that was used in project
 Application architecture
 -------------
 In application MVC architecture was used. JSF can be used as MVC web framework where main controller is Faces Servlet that acts similar to Spring Dispatcher Servlet. In application views are facelets pages (index.xhtml) with templates (header.xhtml, main.xhtml, content.xhtml). Backing beans (they are normal managed beans that handles page action and are responsible for view resolving) was used as sub controllers (IndexController.java) that binds model data to views through service layer. Services (CurrencyRateService.java, SettingsService.java) are responsible for fetching data from remote service, marshaling data to model, calculating changes of exchange rate and getting appliaction settings.
+
+How to build and run project
+-------------
+Clone the project with the following command:
+
+```bash
+$ git clone https://github.com/viktornar/currdiff
+```
+
+Go to the project directory:
+
+```bash
+$ cd currdiff
+```
+
+On Windows OS run:
+
+```bash
+mvnw.cmd package
+mvnw.cmd target\bin\currdiff.bat
+```
+
+On Linux OS run:
+
+```bash
+$ chmod u+x mvnw && ./mvnw package
+$ chmod u+x target/bin/currdiff && mvnw ./target/bin/currdiff
+```
+
+Maven will download dependencies, build project and generate startup script to start web application in console. After launching startup script application will be accessible from the web browser through http://localhost:8080/ address.
+
+If you want to deploy application to standalone tomcat (tomcat 7 and 8 are only supported) change from:
+
+```xml
+<packaging>jar</packaging>
+<!--<packaging>war</packaging>-->
+```
+
+to:
+
+```xml
+<!--<packaging>jar</packaging>-->
+<packaging>war</packaging>
+```
+
+and then on Windows run:
+
+```bash
+mvnw.cmd package
+```
+
+or on Linux run:
+
+```bash
+$ ./mvnw package
+```
+
+Put generated war ( [PROJECT_HOME]/target/currdiff.war ) to tomcat webapps directory and restart it if tomcat doesn't support hot deploy. Application will be accessible through http://localhost:[PORT]/currdiff address.
+
+> **Note:**
+
+> Deploying with exploded war is not supported you must use war file or in exploded war directory manually delete tomcat-*.jar libraries (e.g. [PROJECT_HOME]/target/currdiff/WEB-INF/lib/tomcat-*.jar)
+
+How to develop project
+-------------
+If you use IDEA or Eclipse just import project as maven project. In IDEA use mvn wrapper. After project successful import find Main.java in lt.viktornar.currdiff java package and run it as application. Web application will be accessible from the web browser through http://localhost:8080/ address. 

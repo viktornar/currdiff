@@ -14,6 +14,7 @@
  */
 package lt.viktornar.currdiff.initiallizer;
 
+import javax.faces.webapp.FacesServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
@@ -40,5 +41,9 @@ public class WebAppInitializer implements WebApplicationInitializer {
         Dynamic dynamic = servletContext.addServlet("dispatcher", new DispatcherServlet(ctx));
         dynamic.addMapping("/");
         dynamic.setLoadOnStartup(1);
+
+//        Dynamic faces = servletContext.addServlet("faces", new FacesServlet());
+//        faces.addMapping("*.jsf");
+//        faces.setLoadOnStartup(1);
     }
 }

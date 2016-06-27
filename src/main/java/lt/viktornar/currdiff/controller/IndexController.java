@@ -12,7 +12,7 @@
  along with Subsonic.  If not, see <http://www.gnu.org/licenses/>.
  Copyright 2016 (C) Viktor Nareiko
  */
-package lt.viktornar.currdiff.view;
+package lt.viktornar.currdiff.controller;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,12 +37,12 @@ import java.util.List;
  *
  * @author v.nareiko
  */
-@Component(value="indexView")
+@Component(value="indexController")
 @Scope("session")
-public class IndexView implements Serializable {
+public class IndexController implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    Logger logger = LoggerFactory.getLogger(IndexView.class);
+    Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @Getter
     @Setter

@@ -17,13 +17,13 @@
             <h:panelGrid id="dateGrid" columns="2">
                 <p:outputLabel for="date" value="Selected date:"  />
                 <p:calendar id="date"
-                            value="#{indexView.date}"
+                            value="#{indexController.date}"
                             required="true"
                             pattern="yyyy-MM-dd"
-                            maxdate="#{indexView.maxDate}"
+                            maxdate="#{indexController.maxDate}"
                             style="padding-left: 5px">
 
-                    <p:ajax event="dateSelect" listener="#{indexView.onDateSelect}" />
+                    <p:ajax event="dateSelect" listener="#{indexController.onDateSelect}" />
                     <p:ajax event="click" update="dateGrid" resetValues="true"/>
                 </p:calendar>
             </h:panelGrid>
@@ -32,21 +32,21 @@
 
             <h:panelGrid id="buttonGrid" columns="2" cellpadding="5" style="width: 230px">
                 <p:commandButton value="Get changes"
-                                 actionListener="#{indexView.populateTable}"
+                                 actionListener="#{indexController.populateTable}"
                                  icon="ui-icon-check"
                                  update="form"
                                  ajax="false"
                                  onclick="PF('statusDialog').show()"/>
                 <p:commandButton
                         value="Clean"
-                        actionListener="#{indexView.emptyTable}"
-                        rendered="#{indexView.dataExist}"
+                        actionListener="#{indexController.emptyTable}"
+                        rendered="#{indexController.dataExist}"
                         update="form"/>
             </h:panelGrid>
 
-            <p:separator rendered="#{indexView.dataExist}" />
+            <p:separator rendered="#{indexController.dataExist}" />
 
-            <p:dataTable var="rate" value="#{indexView.items}" id="dataTable" rendered="#{indexView.dataExist}">
+            <p:dataTable var="rate" value="#{indexController.items}" id="dataTable" rendered="#{indexController.dataExist}">
                 <p:column headerText="Currency" sortBy="#{rate.currency}">
                     <h:outputText value="#{rate.currency}" />
                 </p:column>

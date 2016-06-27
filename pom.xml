@@ -6,13 +6,13 @@
     <groupId>lt.viktornar</groupId>
     <artifactId>currdiff</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
+    <!--<packaging>war</packaging>-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.0.3.RELEASE</spring.version>
         <tomcat.version>8.0.36</tomcat.version>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
     </properties>
 
     <licenses>
@@ -46,6 +46,7 @@
             <groupId>org.primefaces.themes</groupId>
             <artifactId>all-themes</artifactId>
             <version>1.0.9</version>
+            <scope>compile</scope>
         </dependency>
 
         <!--EMBEDDED TOMCAT DEPS-->
@@ -67,17 +68,31 @@
             <version>${tomcat.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper-el</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jsp-api</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!--SERVLET DEPS-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
+            <scope>compile</scope>
         </dependency>
 
         <!--VALIDATION API FOR JSR-303 DEPS-->
@@ -85,6 +100,7 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>1.0.0.GA</version>
+            <scope>compile</scope>
         </dependency>
 
         <!--SPRING DEPS-->
@@ -92,6 +108,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -168,8 +185,30 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <packagingExcludes>WEB-INF/lib/tomcat-embed*.jar</packagingExcludes>
+                    <packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <configuration>
+                    <assembleDirectory>target</assembleDirectory>
+                    <programs>
+                        <program>
+                            <mainClass>lt.viktornar.currdiff.Main</mainClass>
+                            <name>currdiff</name>
+                        </program>
+                    </programs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -193,17 +232,6 @@
                 <configuration>
                     <mainClass>lt.viktornar.currdiff.Main</mainClass>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.10</version>
-                <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <stopKey>stop</stopKey>
-                    <stopPort>9999</stopPort>
-                </configuration>
-
             </plugin>
         </plugins>
     </build>
