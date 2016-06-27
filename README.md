@@ -46,30 +46,30 @@ On Windows OS run:
 
 ```bash
 mvnw.cmd package
-mvnw.cmd target\bin\currdiff.bat
+target\bin\currdiff.bat
 ```
 
 On Linux OS run:
 
 ```bash
 $ chmod u+x mvnw && ./mvnw package
-$ chmod u+x target/bin/currdiff && mvnw ./target/bin/currdiff
+$ chmod u+x target/bin/currdiff && ./target/bin/currdiff
 ```
 
-If you want to run embedded server with another port you must export *PORT* environment variable
+If you want to run embedded server with another port you must export *PORT* environment variable.
 
 On Windows OS run:
 
 ```bash
 SET PORT=9090
-mvnw.cmd target\bin\currdiff.bat
+target\bin\currdiff.bat
 ```
 
 On Linux OS run:
 
 ```bash
 $ export PORT=9090
-$ mvnw ./target/bin/currdiff
+$ ./target/bin/currdiff
 ```
 
 Maven will download dependencies, build project and generate startup script to start web application in console. After launching startup script application will be accessible from the web browser through http://localhost:8080/ address.
