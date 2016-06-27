@@ -14,6 +14,8 @@
  */
 package lt.viktornar.currdiff.service;
 
+import lt.viktornar.currdiff.comparator.CurrencyComparator;
+import lt.viktornar.currdiff.comparator.RateChangeInPercentageComparator;
 import lt.viktornar.currdiff.model.ExchangeRates;
 import lt.viktornar.currdiff.model.Item;
 import org.slf4j.Logger;
@@ -79,8 +81,9 @@ public class CurrencyRateService {
         final List<Item> itemsOfGivenDate = getRatesByDate(date);
         final List<Item> itemsOfPrevDate = getRatesByDate(prevDayDate);
 
-        Collections.sort(itemsOfGivenDate);
-        Collections.sort(itemsOfPrevDate);
+        // Sort by currency just in case if service return items not in the same order
+        Collections.sort(itemsOfGivenDate, new CurrencyComparator());
+        Collections.sort(itemsOfPrevDate, new CurrencyComparator());
 
         List<Item> diffItems = new ArrayList<>();
         // itemsOfGivenDate.size() == itemsOfPrevDate.size()
@@ -98,6 +101,9 @@ public class CurrencyRateService {
 
             diffItems.add(itemToReturn);
         }
+
+        // The list of changes has to be ordered, biggest Exchange rate increase first
+        Collections.sort(diffItems, new RateChangeInPercentageComparator());
 
         return diffItems;
     }
