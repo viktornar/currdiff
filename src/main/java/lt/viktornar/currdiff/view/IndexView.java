@@ -3,7 +3,7 @@ package lt.viktornar.currdiff.view;
 
 import lombok.Getter;
 import lombok.Setter;
-import lt.viktornar.currdiff.model.ExchangeRate;
+import lt.viktornar.currdiff.model.Item;
 import lt.viktornar.currdiff.service.CurrencyRateService;
 import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,7 +24,7 @@ import java.util.List;
  */
 
 @Component(value="indexView")
-@Scope("request")
+@Scope("session")
 public class IndexView implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -46,17 +43,16 @@ public class IndexView implements Serializable {
 
     @Getter
     @Setter
-    private List<ExchangeRate> exchangeRates;
+    private List<Item> items;
 
     @Autowired
-    CurrencyRateService currencyRateService;
+    private CurrencyRateService currencyRateService;
 
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    @Autowired
+    private SimpleDateFormat customSimpleDateFormat;
 
     public void onDateSelect(SelectEvent event) {
-//        FacesContext facesContext = FacesContext.getCurrentInstance();
-//        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
-        logger.info(String.format("Date selected: %s", format.format(event.getObject())));
+        logger.info(String.format("Date selected: %s", customSimpleDateFormat.format(event.getObject())));
         date = (Date)event.getObject();
     }
 
@@ -65,14 +61,17 @@ public class IndexView implements Serializable {
     }
 
     public void populateTable() {
-        logger.info(String.format("Date to process: %s", format.format(date)));
-        exchangeRates = currencyRateService.getRatesByDate(date);
-        dataExist = true;
+        logger.info(String.format("Date to process: %s", customSimpleDateFormat.format(date)));
+        items = currencyRateService.getChangesOfRatesByDate(date);
+
+        if (items.size() > 0) {
+            dataExist = true;
+        }
     }
 
     public void emptyTable() {
         logger.info("Deleting data from table");
-        exchangeRates.clear();
+        items.clear();
         dataExist = false;
     }
 }

@@ -13,6 +13,7 @@
 
         <h:form id="form">
             <p:messages id="msgs" autoUpdate="false" closable="true" />
+
             <h:panelGrid id="dateGrid" columns="2">
                 <p:outputLabel for="date" value="Selected date:"  />
                 <p:calendar id="date"
@@ -26,7 +27,9 @@
                     <p:ajax event="click" update="dateGrid" resetValues="true"/>
                 </p:calendar>
             </h:panelGrid>
+
             <p:separator />
+
             <h:panelGrid id="buttonGrid" columns="2" cellpadding="5" style="width: 230px">
                 <p:commandButton value="Get changes"
                                  actionListener="#{indexView.populateTable}"
@@ -40,14 +43,32 @@
                         rendered="#{indexView.dataExist}"
                         update="form"/>
             </h:panelGrid>
+
             <p:separator rendered="#{indexView.dataExist}" />
-            <p:dataTable var="rates" value="#{indexView.exchangeRates}" id="dataTable" rendered="#{indexView.dataExist}">
-                <p:column headerText="Currency">
-                    <h:outputText value="#{rates.currency}" />
+
+            <p:dataTable var="rate" value="#{indexView.items}" id="dataTable" rendered="#{indexView.dataExist}">
+                <p:column headerText="Currency" sortBy="#{rate.currency}">
+                    <h:outputText value="#{rate.currency}" />
                 </p:column>
 
-                <p:column headerText="Quantity">
-                    <h:outputText value="#{rates.quantity}" />
+                <p:column headerText="Quantity" sortBy="#{rate.quantity}">
+                    <h:outputText value="#{rate.quantity}" />
+                </p:column>
+
+                <p:column headerText="Rate" sortBy="#{rate.rate}">
+                    <h:outputText value="#{rate.rate}" />
+                </p:column>
+
+                <p:column headerText="Rate change, %" sortBy="#{rate.rateChangeInPercentage}">
+                    <h:outputText value="#{rate.rateChangeInPercentage}" />
+                    <p:graphicImage name="img/up.gif"
+                                    style="padding-left: 5px;
+                                    padding-bottom: 2px;"
+                                    rendered="#{rate.rateChangeInPercentage gt 0}"/>
+                    <p:graphicImage name="img/down.gif"
+                                    style="padding-left: 5px;
+                                    padding-bottom: 2px;"
+                                    rendered="#{rate.rateChangeInPercentage lt 0}"/>
                 </p:column>
             </p:dataTable>
         </h:form>
