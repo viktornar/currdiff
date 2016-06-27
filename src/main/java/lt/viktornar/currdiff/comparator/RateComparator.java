@@ -16,6 +16,7 @@ package lt.viktornar.currdiff.comparator;
 
 import lt.viktornar.currdiff.model.Item;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -23,7 +24,7 @@ import java.util.Comparator;
  *
  * @author v.nareiko
  */
-public class RateComparator implements Comparator<Item> {
+public class RateComparator implements Comparator<Item>, Serializable {
     @Override
     public int compare(Item o1, Item o2) {
         if (o1.getRate() > o2.getRate()){

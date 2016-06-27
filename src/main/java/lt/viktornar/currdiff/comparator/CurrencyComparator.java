@@ -16,6 +16,7 @@ package lt.viktornar.currdiff.comparator;
 
 import lt.viktornar.currdiff.model.Item;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -23,7 +24,7 @@ import java.util.Comparator;
  *
  * @author v.nareiko
  */
-public class CurrencyComparator implements Comparator<Item>  {
+public class CurrencyComparator implements Comparator<Item>, Serializable {
     @Override
     public int compare(Item o1, Item o2) {
         return o1.getCurrency().compareTo(o2.getCurrency());

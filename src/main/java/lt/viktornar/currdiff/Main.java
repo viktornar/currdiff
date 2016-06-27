@@ -16,6 +16,8 @@ package lt.viktornar.currdiff;
 
 import lt.viktornar.currdiff.server.Starter;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 /**
  * Used for creating and running embedded tomcat server.
@@ -31,7 +33,21 @@ public class Main {
      */
 
     public static void main(String[] args) throws IOException {
-        final Starter starter = new Starter(8080);
+        int port = 8080;
+
+        String PORT = System.getenv("PORT");
+        if (PORT == null || PORT.isEmpty()) {
+            PORT = "8080";
+        }
+
+        try {
+            port = Integer.parseInt(PORT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Running server with default port [8080]");
+        }
+
+        final Starter starter = new Starter(port);
         starter.start();
         System.in.read();
         starter.stop();

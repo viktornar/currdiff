@@ -50,7 +50,6 @@ public class IndexController implements Serializable {
     @Setter
     private Date date;
 
-    @Setter
     private Date maxDate;
 
     @Setter
