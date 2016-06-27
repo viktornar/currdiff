@@ -1,0 +1,13 @@
+*.class
+
+# package files
+*.jar
+*.war
+*.ear
+# build files
+target/
+.idea/
+*.iml
+
+# virtual machine crash logs
+hs_err_pid*
