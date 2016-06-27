@@ -2,7 +2,9 @@
 
 CurrDiff - simple web page application
 ===================
-CurrDiff is a simple web page application that can be used for getting exchange rate changes by using remote Lithuanian National Bank service.
+CurrDiff is a simple web page application that can be used for getting exchange rate changes by using remote Lithuanian National Bank service. Exchange rate changes by default are ordered in descending order.
+
+![image](https://raw.githubusercontent.com/viktornar/currdiff/master/images/application.png)
 
 The main technologies (frameworks, libraries) that was used in project
 -------------
